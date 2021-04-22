@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+    <p>{{ message.split('').reverse().join('') }}</p>
+    <p>原始字串: {{ message }}</p>
+  <p>使用 computed 計算後反轉字串: {{ reversedMessage }}</p>
+  <p>使用 methods 計算後反轉字串: {{ reversedMessage2() }}</p>
+</div>
+
+<script>
+const app = {
+  data() {
+    return {
+      message: 'RUNOOB!!',
+      name: 'Google',
+      url: 'http://www.google.com'
+    }
+  },
+  computed: {
+    // 计算属性的 getter
+    reversedMessage: function () {
+      // `this` 指向 vm 实例
+      return this.message.split('').reverse().join('')
+    },
+    site: {
+      // getter
+      get: function () {
+        return this.name + ' ' + this.url
+      },
+      // setter
+      set: function (newValue) {
+        var names = newValue.split(' ')
+        this.name = names[0]
+        this.url = names[names.length - 1]
+      }
+    }
+  },
+  methods: {
+    reversedMessage2: function () {
+      return this.message.split('').reverse().join('')
+    }
+  }
+}
+ 
+vm =Vue.createApp(app).mount('#app')
+document.write('name: ' + vm.name);
+document.write('<br>');
+document.write('url: ' + vm.url);
+document.write('<br>------ 更新內容 ------<br>');
+// 调用 setter， vm.name 和 vm.url 也会被对应更新
+vm.site = 'website https://www.runoob.com';
+document.write('name: ' + vm.name);
+document.write('<br>');
+document.write('url: ' + vm.url);
+</script>
+</body>
+</html>

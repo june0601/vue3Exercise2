@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/vue-router@4"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+
+</div>
+
+<script>
+const { createApp, h } = Vue
+
+const NotFoundComponent = { template: '<p>Page not found</p>' }
+const HomeComponent = { template: '<p>Home page</p>' }
+const AboutComponent = { template: '<p>About page</p>' }
+
+const routes = {
+  '/': HomeComponent,
+  '/about': AboutComponent
+}
+
+const SimpleRouter = {
+  data: () => ({
+    currentRoute: window.location.pathname
+  }),
+
+  computed: {
+    CurrentComponent() {
+      return routes[this.currentRoute] || NotFoundComponent
+    }
+  },
+
+  render() {
+    return h(this.CurrentComponent)
+  }
+}
+
+createApp(SimpleRouter).mount('#app')
+</script>
+</body>
+</html>

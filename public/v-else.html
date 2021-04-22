@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+    <div v-if="random > 0.5">
+        隨機數{{random}}大於 0.5
+    </div>
+    <div v-else>
+        隨機數{{random}}小於等於0.5
+    </div>
+
+    <div v-if="type === 'A'">
+        A
+   </div>
+   <div v-else-if="type === 'B'">
+     B
+   </div>
+   <div v-else-if="type === 'C'">
+     C
+   </div>
+   <div v-else>
+     Not A/B/C
+   </div>
+</div>
+
+<script>
+    const app = {
+  data() {
+    return {
+      type: "C",
+      random:Math.random()
+    }
+  }
+}
+Vue.createApp(app).mount('#app')
+</script>
+</body>
+</html>

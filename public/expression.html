@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+    <div id="app">
+        {{5+5}}<br>
+        {{ ok ? 'YES' : 'NO' }}<br>
+        {{ message.split('').reverse().join('') }}
+        <div v-bind:id="'list-' + id">菜鳥教程</div>
+    </div>
+
+<script>
+const HelloVueApp = {
+  data() {
+    return {
+      ok: true,
+      message: 'RUNOOB!!',
+      id: 1
+    }
+  }
+}
+ 
+Vue.createApp(HelloVueApp).mount('#app')
+</script>
+</body>
+</html>

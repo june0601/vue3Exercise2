@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+<input style="width:300px" v-model.trim="msg" placeholder="v-model.trim過濾用戶輸入的首尾空格"><br>
+<input style="width:300px" v-model.number="age" type="number" placeholder="v-model.number僅輸入數字" >
+<h3>select 列表</h3>
+ <select v-model="selected" name="fruit">
+    <option value="">選擇一個網站</option>
+    <option value="www.runoob.com">Runoob</option>
+    <option value="www.google.com">Google</option>
+  </select>
+ 
+  <div id="output">
+      選擇的網站是: {{selected}}
+  </div><br>
+  多選時會綁定到一個數組：<br>
+   <select v-model="selected2" name="fruit" multiple>
+    <option value="www.runoob.com">Runoob</option>
+    <option value="www.google.com">Google</option>
+    <option value="www.taobao.com">Taobao</option>
+  </select>
+ 
+  <div id="output">
+      選擇的網站是: {{selected2}}
+  </div><br>
+  使用 v-for 循環輸出選項：<br>
+  <select v-model="selected3">
+    <option v-for="option in options" :value="option.value">
+      {{ option.text }}
+    </option>
+  </select>
+  <span>選擇的是: {{ selected3 }}</span><br><br>
+  值綁定<br>
+  <!-- 當選中時，`picked` 為字符串 "a" -->
+<input type="radio" v-model="picked2" value="a" />
+<span>值為: {{ picked2 }}</span>
+<!-- `toggle` 為 true 或 false -->
+<input type="checkbox" v-model="toggle" />
+<span>值為: {{ toggle }}</span>
+<!-- 當選中第一個選項時，`selected` 為字符串 "abc" -->
+<select v-model="selected4">
+  <option value="abc">ABC</option>
+</select>
+<span>值為: {{ selected4 }}</span>
+<hr>
+<h3>單選按鈕</h3>
+<input type="radio" id="runoob" value="Runoob" v-model="picked">
+  <label for="runoob">Runoob</label>
+  <br>
+  <input type="radio" id="google" value="Google" v-model="picked">
+  <label for="google">Google</label>
+  <br>
+  <span>選中值為: {{ picked }}</span>
+<hr>
+<h3>選框</h3>
+<p>單個復選框：</p>
+  <input type="checkbox" id="checkbox" v-model="checked">
+  <label for="checkbox">{{ checked }}</label>
+    
+  <p>多個復選框：</p>
+  <input type="checkbox" id="runoob" value="Runoob" v-model="checkedNames">
+  <label for="runoob">Runoob</label>
+  <input type="checkbox" id="google" value="Google" v-model="checkedNames">
+  <label for="google">Google</label>
+  <input type="checkbox" id="taobao" value="Taobao" v-model="checkedNames">
+  <label for="taobao">taobao</label>
+  <br>
+  <span>選擇的值為: {{ checkedNames }}</span>
+<hr>
+<p>input 元素：</p>
+  <input v-model="message" placeholder="編輯我……">
+  <p>input 表單消息是: {{ message }}</p>
+    
+  <p>textarea 元素：</p>
+  <textarea v-model="message2" placeholder="多行文本輸入……"></textarea>
+  <p>textarea 表單消息是:</p>
+  <p style="white-space: pre">{{ message2 }}</p>
+</div>
+
+<script>
+const app = {
+  data() {
+    return {
+      message: '',
+      message2: '測試\r\nhttps://www.runoob.com',
+      checked : false,
+      checkedNames: [],
+      picked : 'Runoob',
+      selected: '',
+      selected2: '',
+      selected3: 'www.runoob.com',
+      options: [
+        { text: 'Runoob', value: 'www.runoob.com' },
+        { text: 'Google', value: 'www.google.com' },
+        { text: 'Taobao', value: 'www.taobao.com' }
+      ],
+      picked2:'',
+      toggle:'',
+      selected4: '',
+    }
+  }
+}
+ 
+Vue.createApp(app).mount('#app')
+</script>
+</body>
+</html>

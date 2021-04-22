@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+<h3>按鍵修飾符</h3>
+<!-- 即使 Alt 或 Shift 被一同按下時也會觸發 -->
+<button @click.ctrl="onClick">ctrl 即使 + Alt 或 Shift 被一同按下時也會觸發</button><br>
+
+<!-- 有且只有 Ctrl 被按下的時候才觸發 -->
+<button @click.ctrl.exact="onCtrlClick">only click + ctrl</button><br>
+
+<!-- 沒有任何系統修飾符被按下的時候才觸發 -->
+<button @click.exact="onClick">沒有任何系統修飾符被按下的時候才觸發</button><br>
+
+<!-- Alt + C -->
+<input @keyup.alt.c="alert('Alt + C')" placeholder="Alt + C"><br>
+<!-- Ctrl + Click -->
+<div @click.ctrl="alert('Ctrl + Click')">Do something Ctrl + Click</div>
+<!-- 只有在 keyCode 是 13 時調用 vm.submit() -->
+<input v-on:keyup.enter="submit" placeholder="keyCode 是 13 [Enter]"><br>
+<!-- 縮寫語法 -->
+<input @keyup.enter="submit" placeholder="@keyup.enter縮寫語法"><br>
+<hr>
+<h3>.passive 修飾符</h3>
+<a class="inner1" href="https://www.mozilla.org" target="_blank" @click.passive.prevent="alert('inner1, passive, open new page')">
+    inner1, passive & preventDefault(which is not allowed)
+</a>
+<hr>
+<h3>.once 修飾符</h3>
+<div class="outer" @click.once="alert('outer, once')" @click="alert('outer, none-once, default')">
+  outer
+</div>
+<hr>
+<h3>修飾符的順序</h3>
+<a class="inner4" href="https://developer.mozilla.org/" target="_blank" @click.prevent.self="alert('inner4, prevent then self, not open new page')">        
+    inner4, prevent then self
+  <div class="deepest">
+    click me would not open new page 
+  </div>
+</a>
+<a class="inner5" href="https://developer.mozilla.org/" target="_blank" @click.self.prevent="alert('inner5, self then prevent, not open new page')">
+  inner5, self then prevent
+  <div class="deepest">
+    click me would open new page 
+  </div>
+</a>
+<hr>
+<h3>.self 修飾符</h3>
+<div class="middle" target="_blank" @click.self="alert('middle, self')">
+  middle, self
+  <div class="inner4" target="_blank" @click="alert('inner4')">
+    inner4
+  </div>
+</div>
+<hr>
+<h3>.capture 修飾符</h3>
+<div class="middle" target="_blank" @click.capture="alert('middle, capture')" @click="alert('middle, none-capture, default')">
+  middle, capture & none-capture & self
+  <a class="inner1" href="https://www.mozilla.org" target="_blank" @click="alert('inner1, passive, open new page')">
+    inner1, passive & preventDefault(which is not allowed)
+  </a>
+</div>
+<hr>
+<h3>.prevent 修飾符</h3>
+<a class="inner2" href="https://developer.mozilla.org/" target="_blank" @click.prevent="alert('inner2, none-passive, default, not open new page')">
+    inner2, none-passive & preventDefault(not open new page)
+</a>
+<hr>
+<h3>.stop 修飾符</h3>
+<div class="outer" @click="alert('outer, none-once, default')">
+  outer
+  <div class="middle" target="_blank" @click="alert('middle, none-capture, default')">
+    middle
+    <div class="inner3" target="_blank" @click.stop="alert('inner3, not trigger upper except capture')">
+      inner3, stopPropagation(not trigger upper except capture)
+    </div>
+  </div>
+</div>
+<hr>
+<!-- 阻止單擊事件冒泡 -->
+<a href='#' v-on:click.stop="doThis">click.stop阻止單擊事件繼續傳播</a>
+<!-- 提交事件不再重載頁面 -->
+<form v-on:submit.prevent="onSubmit">
+<button type="submit">
+form submit.prevent提交事件不再重載頁面
+</button>
+</form>
+<!-- 修飾符可以串聯  -->
+<a href='#' v-on:click.stop.prevent="doThat">click.stop.prevent修飾符可以串聯</a>
+<!-- 只有修飾符 -->
+<form v-on:submit.prevent>
+<button type="submit">form只有修飾符v-on:submit.prevent</button>
+</form>
+<!-- 添加事件偵聽器時使用事件捕獲模式 -->
+<!-- 即內部元素觸發的事件先在處理，然後才交由內部元素進行處理 -->
+<div v-on:click.capture="doThis2">click.capture添加事件偵聽器時使用事件捕獲模式</div>
+<!-- 只當事件在該元素本身（而不是子元素）觸發時觸發回調 -->
+<!-- 只當在 event.target 是當前元素自身時觸處理函數 -->
+<!-- 即事件不是從內部元素觸發的 -->
+<div v-on:click.self="doThat2">click.self只當事件在該元素本身（而不是子元素）觸發時觸發回調</div>
+
+<!-- click 事件只能點擊一次，2.1.4版本新增 -->
+<a href='#' v-on:click.once="doThis3">click.once 事件只能點擊一次</a>
+<hr>
+<!-- 這兩個 one() 和 two() 將執行按鈕點擊事件 -->
+  <button @click="one($event), two($event)">
+  點我
+  </button>
+<hr>
+<button @click="say('hi!')">Say hi</button>
+<button @click="say('what?')">Say what</button>
+<hr>
+<!-- `greet` 是在下面定義的方法名 -->
+  <button @click="greet">點我</button>
+<hr>
+<button @click="counter += 1">增加 1</button>
+  <p>這個按鈕被點擊了 {{ counter }} 次。</p>
+</div>
+
+<script>
+
+const app = {
+  data() {
+    return {
+      counter: 0,
+      name: 'Runoob'
+    }
+  },
+  methods: {
+    greet(event) {
+      // `methods` 內部的 `this` 指向當前活動實例
+      alert('Hello ' + this.name + '!')
+      // `event` 是原生 DOM event
+      if (event) {
+        alert(event.target.tagName)
+      }
+    },
+    say(message) {
+      alert(message)
+    },
+    one(event) {
+      alert("第一個事件處理器邏輯...")
+    },
+    two(event) {
+      alert("第二個事件處理器邏輯...")
+    },
+    doThis(){
+        alert('click.stop阻止單擊事件繼續傳播')
+    },
+    onSubmit(){
+        alert('submit.prevent提交事件不再重載頁面')
+    },
+    doThat(){
+        alert('click.stop.prevent修飾符可以串聯')
+    },
+    doThis2(){
+        alert('click.capture添加事件偵聽器時使用事件捕獲模式')
+    },
+    doThat2(){
+        alert('click.self只當事件在該元素本身（而不是子元素）觸發時觸發回調')
+    },
+    doThis3(){
+        alert('click.once 事件只能點擊一次')
+    },
+    alert(message){
+        alert(message)
+    },
+    submit(){
+        alert('keyCode 是 13 ')
+    },
+    onClick(){
+        alert('onClick')
+    },
+    onCtrlClick(){
+        alert('onCtrlClick')
+    }
+
+  }
+}
+Vue.createApp(app).mount('#app') 
+</script>
+</body>
+</html>

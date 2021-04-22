@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<!-- 因為 AJAX 庫和通用工具的生態已經相當豐富，Vue 核心代碼沒有重復 -->
+<!-- 提供這些功能以保持精簡。這也可以讓你自由選擇自己更熟悉的工具。 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+異步加載中使用 watch
+<p>
+    輸入一個問題，以 ? 問號結尾輸出答案:
+    <input v-model="question" />
+  </p>
+  <p>答案:{{ answer }}</p>
+<hr>
+    公里 : <input type = "text" v-model = "kilometers">
+    公尺 : <input type = "text" v-model = "meters">
+    <p id="info"></p> 
+<hr>
+    <p style = "font-size:25px;">計數器: {{ counter }}</p>
+    <button @click = "counter++" style = "font-size:25px;">點我</button>
+</div>
+
+<script>
+const app = {
+  data() {
+    return {
+      counter: 1,
+      kilometers : 0,
+      meters:0,
+      question: '',
+      answer: ''
+    }
+  },
+  watch : {
+	  kilometers:function(val) {
+		  this.kilometers = val;
+		  this.meters = this.kilometers * 1000
+	  },
+	  meters : function (val) {
+		  this.kilometers = val/ 1000;
+		  this.meters = val;
+	  },
+       // 每當問題改變時，此功能將運行，以 ? 號結尾
+      question(newQuestion, oldQuestion) {
+        if (newQuestion.indexOf('?') > -1) {
+          this.getAnswer()
+        }
+      }
+  },
+  methods: {
+      getAnswer() {
+        this.answer = '加載中...'
+        axios
+          .get('https://yesno.wtf/api')
+          .then(response => {
+            this.answer = response.data.answer
+          })
+          .catch(error => {
+            this.answer = '錯誤! 無法訪問 API。 ' + error
+          })
+      }
+    }
+}
+vm = Vue.createApp(app).mount('#app')
+vm.$watch('kilometers', function (newValue, oldValue) {
+    // 這個回調將在 vm.kilometers 改變後調用
+    document.getElementById ("info").innerHTML = "修改前值為: " + oldValue + "，修改後值為: " + newValue;
+});
+vm.$watch('counter', function(nval, oval) {
+    alert('計数器值的變化 :' + oval + ' 變為 ' + nval + '!');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+<p>
+    <a :href=" url ">測試參數</a>
+</p>
+<!--完整語法--> 
+<a v-on:click="doSomething" >v-on:click指令完整語法 </a> <br/>
+
+<!--縮寫--> 
+<a @click = "doSomething" > @click縮寫 </a> <br/>
+<br/>
+<form v-on:submit.prevent="onSubmit">
+<button v-on:click="warn('Form cannot be sumitted yet.',$event)">
+    cannot be sumitted
+</button><br/>
+<button type="submit">submit</button>
+</form>
+</div>
+
+<script>
+const HelloVueApp = {
+  data() {
+    return {
+      url: 'https://www.google.com.tw'
+    }
+  },
+  methods: {
+    doSomething(){
+        alert('doSomething');
+    },
+    onSubmit(){
+        alert('onSubmit');
+    },
+    warn:function(message, event){
+        if(event){
+            event.preventDefault();
+        }
+        alert(message);
+    }
+  }
+}
+Vue.createApp(HelloVueApp).mount('#app')
+</script>
+</body>
+</html>

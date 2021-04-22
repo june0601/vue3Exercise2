@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+.active {
+    width: 100px;
+    height: 100px;
+    background: green;
+}
+.static {
+	width: 100px;
+	height: 100px;
+}
+.active2 {
+	background: green;
+}
+.active3 {
+	background: #f44336;
+}
+.text-danger {
+	background: red;
+}
+.text-danger2 {
+	background: #ff5722;
+}
+.classE {
+    color: red;
+	font-size:30px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <runoob2 class="classE"></runoob2>
+<hr>
+    <runoob class="classC classD"></runoob>
+<hr>
+    <div :style="[baseStyles, overridingStyles]">測試3</div>
+<hr>
+    <div :style="styleObject">測試2</div>
+<hr>
+    <div :style="{ color: activeColor, fontSize: fontSize + 'px' }">測試</div>
+<hr>
+    <div class="static" :class="[isActive4 ? activeClass : '', errorClass2]"></div>
+<hr>
+    <div class="static" :class="[activeClass, errorClass]"></div>
+<hr>
+    <div class="static" :class="classObject2"></div>
+<hr>
+    <div class="static" :class="classObject"></div>
+<hr>
+<div class="static" :class="{ 'active2': isActive2, 'text-danger': hasError }">
+    </div>
+<hr>
+    <div :class="{ 'active': isActive }"></div>
+</div>
+
+<script>
+const app = {
+    data() {
+      return {
+         isActive: true,
+         isActive2: false,
+         isActive3: false,
+         isActive4: false,
+         hasError: true,
+         classObject: {
+            'active2': true,
+            'text-danger': false
+         },
+         error: {value:true,type:'fatal'},
+         activeClass: 'active3', //'','active3'
+         errorClass: '', //'','text-danger'
+         errorClass2: 'text-danger2',  //'','text-danger2'
+         activeColor: 'red',
+			fontSize: 30,
+        styleObject: {
+            color: "red",
+            fontSize: "30px"
+        },
+        baseStyles: {
+                color: 'green',
+                fontSize: '30px'
+        },
+        overridingStyles: {
+            'font-weight': 'bold'
+        }
+      }
+   },
+   computed: {
+      classObject2() {
+         return {
+            active3: this.isActive3 && !this.error,
+            'text-danger': this.error && this.error.type === 'fatal'
+         }
+      }
+   },
+   components: {
+       'runoob':{
+           template: `<h1 class="classA classB">I like runoob!</h1>`
+       },
+       'runoob2':{
+           template: `
+            <p :class="$attrs.class">I like runoob!</p>
+            <span>這是一個子組件</span>
+        `
+       }
+   }
+}
+
+Vue.createApp(app).mount('#app')
+
+const person={
+    name: '小明',
+    cash: 1000
+}
+const sentence=`我是 ${ person.name }，身上帶有 ${ (function(c){ return c*2})(person.cash)} 元`;
+console.log(sentence);
+const sentence2=`我是 ${ person.name }，身上帶有 ${ ((c)=>c*3)(person.cash)} 元`;
+console.log(sentence2);
+const sentence3 = `我是 ${ person.name }， ${ `身上有帶 ${ person.cash }` } 元`;
+console.log(sentence3);
+</script>
+</body>
+</html>

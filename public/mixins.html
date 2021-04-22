@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+<div id="app">
+
+</div>
+
+<script>
+// 定義混入對象
+const myMixin = {
+    data() {
+    return {
+      message: 'hello',
+      foo: 'runoob'
+    }
+  },
+  created() {
+    this.hello()
+    console.log('mixin 對象的鉤子被調用')
+  },
+  methods: {
+    hello() {
+      console.log('歡迎來到混入實例-RUNOOB!')
+    },
+    foo2() {
+      console.log('foo2')
+    },
+    conflicting() {
+      console.log('from mixin')
+    }
+  }
+}
+ 
+// 定義一個應用，使用混入
+const app = Vue.createApp({
+  mixins: [myMixin],
+  data() {
+    return {
+      message: 'goodbye',
+      bar: 'def'
+    }
+  },
+  created() {
+    document.write("<hr>")
+    document.write(JSON.stringify(this.$data)) 
+    console.log('組件鉤子被調用')
+  },
+  methods: {
+    bar2() {
+      console.log('bar2')
+    },
+    conflicting() {
+      console.log('from self')
+    }
+  },
+  myOption: "<font color='red'>hello!</font>"
+})
+
+// 為自定義的選項 'myOption' 注入一個處理器。
+app.mixin({
+  created() {
+    const myOption = this.$options.myOption
+    if (myOption) {
+      document.write(myOption)
+    }
+  }
+})
+ 
+const vm = app.mount('#app')
+ 
+vm.foo2() // => "foo"
+vm.bar2() // => "bar2"
+vm.conflicting() // => "from self"
+</script>
+</body>
+</html>

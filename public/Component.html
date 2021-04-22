@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+
+</style>
+</head>
+<body>
+Props 驗證
+  <div id="G8">
+    <input type="text" v-model="msg1" placeholder="數字驗證">
+    <input type="text" v-model="msg2" placeholder="數字或者字符串">
+    <input type="text" v-model='msg3' placeholder="必傳且是字符串">
+    <input type="text" v-model='msg4' placeholder="數字且有默認值">
+    <h-component :g-msg='msg1' :h-msg='msg2' :i-msg='msg3' :j-msg='msg4'></h-component>
+  </div>
+<hr>
+<div id="app">
+動態 Props
+<site-info
+    v-for="site in sites"
+    :id="site.id"
+    :title="site.title"
+  ></site-info>
+<hr>
+    Props
+    <site-name title="Google"></site-name>
+  <site-name title="Runoob"></site-name>
+  <site-name title="Taobao"></site-name>
+    <hr>
+    <runoob></runoob>
+    <hr>
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <hr>
+    局部組件
+    <runoob-a></runoob-a>
+</div>
+
+<script>
+
+
+var runoobA = {
+  template: '<h1>自定義組件A!</h1>'
+}
+
+const Site = {
+  data() {
+    return {
+      sites: [
+        { id: 1, title: 'Google' },
+        { id: 2, title: 'Runoob' },
+        { id: 3, title: 'Taobao' }
+      ]
+    }
+  }
+}
+
+// 創建一個Vue 應用
+const app = Vue.createApp(Site)
+const vm = Vue.createApp({
+  data(){
+    return {
+    msg1:' xbv',
+    msg2:'',
+    msg3:'',
+    msg4:''
+    }
+  }
+})
+vm.component('h-component',{
+    props:{
+      // 基礎的類型檢查 (`null` 和 `undefined` 會通過任何類型驗證)
+      gMsg:Number,
+      // 多個可能的類型
+      hMsg:[String,Number],
+      // 必填的字符串
+      iMsg:{type:String,required:true},
+      // 帶有默認值的數字
+      jMsg:{type:Number,default:100},
+       // 帶有默認值的對象
+      propE: {
+        type: Object,
+        // 對象或數組默認值必須從一個工廠函數獲取
+        default: function () {
+          return { message: 'hello' }
+        }
+      },
+      // 自定義驗證函數
+      propF: {
+        validator: function (value) {
+          // 這個值必須匹配下列字符串中的一個
+          return ['success', 'warning', 'danger'].indexOf(value) !== -1
+        }
+      }
+    },
+    template:`<p><span>{{gMsg}}</span><br />
+    <span>{{hMsg}}</span><br /><span>{{iMsg}}</span><br />
+    <span>{{jMsg}}</span><br /></p>`
+})
+                    
+vm.mount('#G8')
+app.component('runoob-a', runoobA)
+
+ 
+// 定義一個名為 button-counter 的新全局組件
+app.component('runoob', {
+    template: '<h1>自定義組件!</h1>'
+})
+
+app.component('site-name', {
+  props: ['title'],
+  template: `<h4>{{ title }}</h4>`
+})
+
+// 定義一個名為 button-counter 的新全局組件
+app.component('button-counter', {
+  data() {
+    return {
+      count: 0
+    }
+  },
+  template: `
+    <button @click="count++">
+      點了 {{ count }} 次！
+    </button>`
+})
+
+app.component('site-info', {
+  props: ['id','title'],
+  template: `<h4>{{ id }} - {{ title }}</h4>`
+})
+
+app.component('my-component', {
+  template:'<p><span>{{gMsg}}</span><br /><span>{{hMsg}}</span><br /><span>{{iMsg}}</span><br /><span>{{jMsg}}</span><br /></p>',
+  props: {
+    // 基礎的類型檢查 (`null` 和 `undefined` 會通過任何類型驗證)
+    gMsg: Number,
+    // 多個可能的類型
+    hMsg: [String, Number],
+    // 必填的字符串
+    iMsg: {
+      type: String,
+      required: true
+    },
+    // 帶有默認值的數字
+    jMsg: {
+      type: Number,
+      default: 100
+    },
+    // 帶有默認值的對象
+    propE: {
+      type: Object,
+      // 對象或數組默認值必須從一個工廠函數獲取
+      default: function () {
+        return { message: 'hello' }
+      }
+    },
+    // 自定義驗證函數
+    propF: {
+      validator: function (value) {
+        // 這個值必須匹配下列字符串中的一個
+        return ['success', 'warning', 'danger'].indexOf(value) !== -1
+      }
+    }
+  }
+})
+
+app.mount('#app')
+</script>
+</body>
+</html>

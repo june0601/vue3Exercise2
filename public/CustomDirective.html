@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue3 Exercise II</title>
+<script src="https://unpkg.com/vue@next"></script>
+<style>
+.demo {
+  font-family: sans-serif;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  padding: 20px 30px;
+  margin-top: 1em;
+  margin-bottom: 40px;
+  user-select: none;
+  overflow-x: auto;
+}
+/*
+.full-page {
+  height: 100vh
+}
+*/
+</style>
+</head>
+<body>
+<div id="app">
+<my-component></my-component>
+<hr>
+F12 console.log
+<div v-demo="{ color: 'white', text: 'hello!' }"></div>
+<hr>
+<div id="dynamic-arguments-example" class="demo full-page">
+  <h2>Scroll down the page</h2>
+  <input type="range" min="0" max="500" v-model="pinPadding">
+  <p v-pin3:[direction]="pinPadding">Stick me {{pinPadding}}px from the {{ direction }} of the page 3</p>
+</div>
+<hr>
+<div id="dynamic-arguments-example2" class="demo full-page">
+  <h2>Scroll down the page 2</h2>
+  <p v-pin2:[direction]="200">Stick me 200px from the {{ direction }} of the page 2</p>
+</div>
+<hr>
+<div id="dynamic-arguments-example" class="demo">
+  <p>Scroll down the page 1</p>
+  <p v-pin="450">Stick me 200px from the top of the page 1</p>
+</div>
+<hr>
+backgroundColor
+<div v-runoob2="{ color: 'green', text: '菜鳥教程!' }"></div>
+<hr>
+F12 console.log
+<div v-runoob="{ name: '菜鳥教程', url: 'www.runoob.com' }"></div>
+<hr>
+<p>頁面載入時，input 元素自動獲取焦點：</p>
+    <input v-focus>
+</div>
+
+<script>
+/* 寫法一 */
+
+const app = Vue.createApp({
+   data() {
+    return {
+      direction: 'right',
+      pinPadding: 200,
+    }
+  }
+})
+// 注冊一個全局自定義指令 `v-focus`
+app.directive('focus', {
+  // 當被綁定的元素掛載到 DOM 中時……
+  mounted(el) {
+    // 聚焦元素
+    el.focus()
+  }
+})
+/*
+binding
+binding 是一個對象，包含以下屬性：
+instance：使用指令的組件實例。
+value：傳遞給指令的值。例如，在 v-my-directive="1 + 1" 中，該值為 2。
+oldValue：先前的值，僅在 beforeUpdate 和 updated 中可用。值是否已更改都可用。
+arg：參數傳遞給指令 (如果有)。例如在 v-my-directive:foo 中，arg 為 "foo"。
+modifiers：包含修飾符 (如果有) 的對象。例如在 v-my-directive.foo.bar 中，修飾符對象為 {foo: true，bar: true}。
+dir：一個對象，在注冊指令時作為參數傳遞。例如，在以下指令中
+
+vnode
+作為 el 參數收到的真實 DOM 元素的藍圖。
+
+prevNode
+上一個虛擬節點，僅在 beforeUpdate 和 updated 鉤子中可用。
+*/
+app.directive('runoob', (el, binding, vnode,prevNode) => {
+console.log(binding.value.name) // => "菜鳥教程"
+console.log(binding.value.url) // => "www.runoob.com"
+var s = JSON.stringify
+el.innerHTML = s(binding.value)
+})
+
+app.directive('runoob2', function (el, binding) {
+    // 簡寫方式設置文本及背景顏色
+    el.innerHTML = binding.value.text
+    el.style.backgroundColor = binding.value.color
+})
+
+app.directive('pin', {
+  mounted(el, binding) {
+    el.style.position = 'fixed'
+    // binding.value is the value we pass to directive - in this case, it's 200
+    el.style.top = binding.value + 'px'
+  }
+})
+
+app.directive('pin2', {
+  mounted(el, binding) {
+    el.style.position = 'fixed'
+    const s = binding.arg || 'top'
+    el.style[s] = binding.value + 'px'
+  }
+})
+
+app.directive('pin3', {
+  mounted(el, binding) {
+    el.style.position = 'fixed'
+    const s = binding.arg || 'top'
+    el.style[s] = binding.value + 'px'
+  },
+  updated(el, binding) {
+    const s = binding.arg || 'top'
+    el.style[s] = binding.value + 'px'
+  }
+})
+
+app.directive('demo', (el, binding) => {
+  console.log(binding.value.color) // => "white"
+  console.log(binding.value.text) // => "hello!"
+})
+
+app.component('my-component', {
+  template: `
+    <div> // v-demo directive will be applied here
+      <span>My component content</span>
+    </div>
+  `
+})
+
+// 注冊
+app.directive('my-directive', {
+  // 指令是具有一組生命週期的鉤子：
+  // 在綁定元素的 attribute 或事件監聽器被應用之前調用
+  created() {},
+  // 在綁定元素的父組件掛載之前調用
+  beforeMount() {},
+  // 綁定元素的父組件被掛載時調用
+  mounted() {},
+  // 在包含組件的 VNode 更新之前調用
+  beforeUpdate() {},
+  // 在包含組件的 VNode 及其子組件的 VNode 更新之後調用
+  updated() {},
+  // 在綁定元素的父組件卸載之前調用
+  beforeUnmount() {},
+  // 卸載綁定元素的父組件時調用
+  unmounted() {}
+})
+ 
+// 注冊 (功能指令)
+app.directive('my-directive', () => {
+  // 這將被作為 `mounted` 和 `updated` 調用
+})
+ 
+// getter, 如果已注冊，則返回指令定義
+const myDirective = app.directive('my-directive')
+app.mount('#app')
+
+
+/* 寫法二 */
+/*
+const app = {
+   data() {
+      return {
+      }
+   },
+   directives: {
+      focus: {
+         // 指令的定義
+         mounted(el) {
+            el.focus()
+         }
+      }
+   }
+}
+ 
+Vue.createApp(app).mount('#app')
+*/
+
+
+</script>
+</body>
+</html>
